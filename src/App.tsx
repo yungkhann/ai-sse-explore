@@ -59,13 +59,17 @@ function App() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.name.endsWith(".jsonl")) {
-      reset();
+      if (chartRef.current) {
+        chartRef.current.innerHTML = "";
+      }
       startStream(file);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     } else {
       alert("Please select a .jsonl file");
     }
   };
-
   const handlePlay = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -165,7 +169,7 @@ function App() {
                 </div>
               </div>
             )}
-            {parsingStatus && status !== "error" && (
+            {parsingStatus && status === "streaming" && (
               <div className="my-2 p-3 bg-sky-50 border border-sky-200 rounded-lg">
                 <div className="flex items-center gap-2">
                   <Loader className="w-5 h-5 text-sky-500 flex-shrink-0 animate-spin" />

@@ -105,6 +105,9 @@ export function useStream() {
       setErrorMessage("");
       timeoutIdsRef.current = [];
 
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
       abortControllerRef.current = new AbortController();
 
       try {
@@ -128,6 +131,8 @@ export function useStream() {
             err instanceof Error ? err.message : "Failed to process file"
           );
         }
+      } finally {
+        abortControllerRef.current = null;
       }
     },
     [processEvents]
@@ -136,6 +141,7 @@ export function useStream() {
   const stopStream = useCallback(() => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
+      abortControllerRef.current = null;
     }
 
     timeoutIdsRef.current.forEach(clearTimeout);
