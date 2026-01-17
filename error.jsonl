@@ -1,0 +1,2 @@
+{"event":"token","data":{"delta":"Test"}}
+{"event":"error","data":{"message":"Something went wrong"}}
